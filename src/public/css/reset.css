@@ -18,3 +18,13 @@ header{
 main{
   min-height: 85vh;
 }
+form{
+  display: grid;
+  grid-template-columns: 47vw 47vw;
+  gap: 0 2vw;
+  padding: 0 2vw;
+}
+button[type="submit"]{
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
