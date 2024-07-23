@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/public/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/public/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/public/css/reset.css">
+  <link rel="stylesheet" href="/public/css/cabecalho.css">
+  <title>La Nelli</title>
+</head>
+<body>
+  <h1>La Nelli</h1>
+
+  <form method="dialog" onsubmit="logar()">
+    <div>
+      <label for="email">Email</label>
+      <input type="text" name="email" id="email">
+    </div>
+    <div>
+      <label for="senha">Senha</label>
+      <input type="password" name="senha" id="senha" class="btn btn-primary">
+    </div>
+
+    <button type="submit">Entrar</button>
+  </form>
+
+  <script src="/public/bootstrap.bundle.min.js"></script>
+  <script src="/public/axios.min.js"></script>
+  <script src="/public/sweetAlert2.js"></script>
+  <script>
+    function logar() {
+      const email = document.querySelector('#email').value;
+      const senha = document.querySelector('#senha').value;
+      axios.post('<%= urlApi %>/auth', {
+        email,
+        senha,
+      })
+        .then(response => {
+          Swal.fire({
+            title: "Sucesso!",
+            text: response.data.mensagem,
+            icon: "success"
+          });
+
+          localStorage.setItem('token', response.data.token)
+
+          location.href = '/'
+        })
+        .catch(error => {
+          Swal.fire({
+            title: "Erro!",
+            text: error.response.data.mensagem,
+            icon: "error"
+          });
+        });
+    }
+  </script>
+</body>
+</html>

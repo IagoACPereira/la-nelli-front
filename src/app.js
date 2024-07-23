@@ -12,7 +12,7 @@ app
   )
   .set('view engine', 'ejs')
   .set('views', `./src/views`)
-  .use('/static/', express.static(`./src/public/`));
+  .use('/public/', express.static(`./src/public/`));
 
 routes(app);
 
