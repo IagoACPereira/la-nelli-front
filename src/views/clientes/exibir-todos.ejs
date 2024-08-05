@@ -15,7 +15,21 @@
   <main>
     <h2>Clientes</h2>
 
-    <a href="/clientes/adicionar" class="btn btn-primary">Adicionar Cliente</a>
+    <a href="/clientes/adicionar" class="btn btn-primary mb-3">Adicionar Cliente</a>
+
+    <div id="container-clientes">
+      <% clientes.map(cliente => { %>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title" style="text-transform: capitalize;"><%= cliente.nome %></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%= cliente.telefone %> - <%= cliente.email %></h6>
+            <p class="card-text" style="text-transform: capitalize;"><%= cliente.endereco %></p>
+            <a href="/cliente?id=${cliente.id}" class="text-primary me-3">Acessar</a>
+            <a href="" class="text-danger">Deletar</a> 
+          </div>
+        </div>
+      <% }) %>
+    </div>
   </main>
 
   <%- include('../rodape.ejs') %>
@@ -23,8 +37,5 @@
   <script src="/public/axios.min.js"></script>
   <script src="/public/sweetAlert2.js"></script>
   <script src="/public/js/autenticacao.js"></script>
-  <script>
-    
-  </script>
 </body>
 </html>

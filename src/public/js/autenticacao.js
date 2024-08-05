@@ -7,5 +7,9 @@ axios.get('http://localhost:3000/api', {
     console.log(response.data);
   })
   .catch(error => {
-    location.href = '/login'
+    if (error.response.status === 401) {
+      location.href = '/login';
+    }
+
+    console.log(error.response.data);
   })

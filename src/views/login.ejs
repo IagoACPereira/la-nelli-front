@@ -43,7 +43,8 @@
             icon: "success"
           });
 
-          localStorage.setItem('token', response.data.token)
+          localStorage.setItem('token', response.data.token);
+          document.cookie = `authorization=${response.data.token}`
 
           location.href = '/'
         })

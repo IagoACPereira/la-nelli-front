@@ -13,7 +13,7 @@
   <%- include('../cabecalho.ejs') %>
 
   <main>
-    
+    <div id="container-cliente"></div>
   </main>
 
   <%- include('../rodape.ejs') %>
@@ -22,7 +22,166 @@
   <script src="/public/sweetAlert2.js"></script>
   <script src="/public/js/autenticacao.js"></script>
   <script>
-    
+    const containerCliente = document.querySelector('#container-cliente')
+    const id = location.href.split('?')[1].replace('id=', '')
+
+    axios.get(`<%= urlApi %>/clientes/${id}`, {
+      headers: {
+        authorization: localStorage.getItem('token')
+      }
+    })
+      .then(response => {
+        const { data } = response;
+        containerCliente.innerHTML = `
+<h2 style="text-transform: capitalize;">${data.nome}</h2>
+
+<form method="dialog" onsubmit="atualizarCliente()" class="mb-3">
+  <div class="mb-3">
+    <label for="nome" class="form-label">Nome</label>
+    <input type="text" name="nome" id="nome" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label for="telefone" class="form-label">Telefone</label>
+    <input type="text" name="telefone" id="telefone" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="text" name="email" id="email" class="form-control">
+  </div class="mb-3">
+
+  <div class="mb-3">
+    <label for="cep" class="form-label">CEP</label>
+    <div class="input-group">
+      <input type="text" name="cep" id="cep" class="form-control">
+      <button type="button" class="btn btn-primary" onclick="pesquisarCep()">Pesquisar</button>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="logradouro" class="form-label">Logradouro</label>
+    <input type="text" name="logradouro" id="logradouro" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label for="num" class="form-label">Nº</label>
+    <input type="text" name="num" id="num" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label for="bairro" class="form-label">Bairro</label>
+    <input type="text" name="bairro" id="bairro" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label for="cidade" class="form-label">Cidade</label>
+    <input type="text" name="cidade" id="cidade" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label for="uf" class="form-label">UF</label>
+    <input type="text" name="uf" id="uf" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Atualizar</button>
+</form>
+
+<h3>Pedidos</h3>
+        `;
+
+        const nome = document.querySelector('#nome');
+        const telefone = document.querySelector('#telefone');
+        const email = document.querySelector('#email');
+        const cep = document.querySelector('#cep');
+        const logradouro = document.querySelector('#logradouro');
+        const num = document.querySelector('#num');
+        const bairro = document.querySelector('#bairro');
+        const cidade = document.querySelector('#cidade');
+        const uf = document.querySelector('#uf');
+
+        nome.value = data.nome;
+        telefone.value = data.telefone;
+        email.value = data.email;
+        cep.value = data.endereco.split('cep: ')[1].trim();
+        logradouro.value = data.endereco.split(',')[0].trim();
+        num.value = data.endereco.split(',')[1].trim();
+        bairro.value = data.endereco.split(',')[2].trim();
+        cidade.value = data.endereco.split(',')[3].split('-')[0].trim();
+        uf.value = data.endereco.split(',')[3].split('-')[0].trim();
+      })
+      .catch(error => {
+        const { data } = error.response;
+        containerCliente.innerHTML = `
+<div class="alert alert-info w-50" role="alert">
+  Dados indisponíveis no momento.
+</div>
+        `;
+      })
+
+      function pesquisarCep() {
+      const cep = document.querySelector('#cep').value;
+      const num = document.querySelector('#num').value;
+      const logradouro = document.querySelector('#logradouro');
+      const bairro = document.querySelector('#bairro');
+      const cidade = document.querySelector('#cidade');
+      const uf = document.querySelector('#uf');
+
+      axios.get(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => {
+          const { data } = response;
+
+          logradouro.value = data.logradouro;
+          bairro.value = data.bairro;
+          cidade.value = data.localidade;
+          uf.value = data.uf;
+        })
+        .catch(error => {
+          console.log(error.response.data);
+        })
+    }
+
+    function atualizarCliente() {
+      const nome = document.querySelector('#nome').value;
+      const telefone = document.querySelector('#telefone').value;
+      const email = document.querySelector('#email').value;
+      const cep = document.querySelector('#cep').value;
+      const logradouro = document.querySelector('#logradouro').value;
+      const num = document.querySelector('#num').value;
+      const bairro = document.querySelector('#bairro').value;
+      const cidade = document.querySelector('#cidade').value;
+      const uf = document.querySelector('#uf').value;
+      const endereco = `${logradouro}, ${num}, ${bairro}, ${cidade} - ${uf}. cep: ${cep}`;
+
+      axios.put(`<%= urlApi %>/clientes/${id}`, {
+        nome,
+        telefone,
+        email,
+        endereco,
+      }, {
+      headers: {
+        authorization: localStorage.getItem('token')
+      }
+    })
+      .then(response => {
+        const { data } = response;
+        console.log(data);
+        Swal.fire({
+          title: "Sucesso!",
+          text: response.data.mensagem,
+          icon: "success"
+        });
+      })
+      .catch(error => {
+        const { data } = error.response;
+        console.log(data);
+        Swal.fire({
+          title: "Erro!",
+          text: error.response.data.mensagem,
+          icon: "error"
+        });
+      });
+    }
   </script>
 </body>
 </html>

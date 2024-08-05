@@ -12,10 +12,56 @@
 <body>
   <%- include('../cabecalho.ejs') %>
 
-  <main>
+  <main class="p-3">
     <h2>Pedidos</h2>
 
-    <a href="/pedidos/adicionar" class="btn btn-primary">Adicionar Pedido</a>
+    <a href="/pedidos/adicionar" class="btn btn-primary mb-3">Adicionar Pedido</a>
+
+    <div id="container-pedidos">
+      <% pedidos.map(pedido => { %>
+        <div class="card">
+          <div class="card-body">
+            <h6>
+              Pedido: <%= pedido.id %>
+            </h6>
+            <h5 class="card-title mb-3" style="text-transform: capitalize;"><%= pedido.cliente.nome %></h5>
+            <div class="text-secondary mb-3" style="text-transform: capitalize;">
+              <%= pedido.data_pedido %>&nbsp;
+              <% if (pedido.status_pedido.status === 'pendente') { %>
+                <strong class="text-warning"><%= pedido.status_pedido.status %></strong>
+              <% } else if (pedido.status_pedido.status === 'cancelado') { %>
+                <strong class="text-danger"><%= pedido.status_pedido.status %></strong>
+              <% } else if (pedido.status_pedido.status === 'concluido') { %>
+                <strong class="text-success"><%= pedido.status_pedido.status %></strong>
+              <% } %>
+            </div>
+            <p class="card-subtitle mb-2 text-muted"><%= pedido.cliente.telefone %> - <%= pedido.cliente.email %></p>
+            <p class="card-text text-secondary" style="text-transform: capitalize;"><%= pedido.cliente.endereco %></p>
+            <div class="card mb-3 p-3" id="container-itens">
+              <table class="table table-striped">
+                <tbody>
+                  <tr>
+                    <th>Produto</th>
+                    <th>R$</th>
+                    <th>Categoria</th>
+                  </tr>
+                  <% pedido.itens_pedidos.map(item => { %>
+                  <tr>
+                    <td><%= item.produto.nome %></td>
+                    <td><%= item.produto.preco_venda %></td>
+                    <td><%= item.produto.categorias_produto.categoria %></td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+            <h6>R$ <%= pedido.total %></h6>
+            <a href="/cliente?id=${cliente.id}" class="text-primary me-3">Acessar</a>
+            <a href="" class="text-danger">Deletar</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
   </main>
 
   <%- include('../rodape.ejs') %>

@@ -16,51 +16,52 @@
     <h2>Adicionar Cliente</h2>
 
     <form method="dialog" onsubmit="submeterFormulario()">
-      <div>
-        <label for="nome">Nome</label>
-        <input type="text" name="nome" id="nome">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" name="nome" id="nome" class="form-control">
       </div>
 
-      <div>
-        <label for="telefone">Telefone</label>
-        <input type="number" name="telefone" id="telefone">
+      <div class="mb-3">
+        <label for="telefone" class="form-label">Telefone</label>
+        <input type="number" name="telefone" id="telefone" class="form-control">
       </div>
 
-      <div>
-        <label for="email">Email</label>
-        <input type="text" name="email" id="email">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="text" name="email" id="email" class="form-control">
+      </div class="mb-3">
+
+      <div class="mb-3">
+        <label for="cep" class="form-label">CEP</label>
+        <div class="input-group">
+          <input type="number" name="cep" id="cep" class="form-control">
+          <button type="button" class="btn btn-primary" onclick="pesquisarCep()">Pesquisar</button>
+        </div>
       </div>
 
-      <div>
-        <label for="cep">CEP</label>
-        <input type="number" name="cep" id="cep">
-        <button type="button" class="btn btn-primary" onclick="pesquisarCep()">Pesquisar</button>
+      <div class="mb-3">
+        <label for="logradouro" class="form-label">Logradouro</label>
+        <input type="text" name="logradouro" id="logradouro" class="form-control">
       </div>
 
-
-      <div>
-        <label for="logradouro">Logradouro</label>
-        <input type="text" name="logradouro" id="logradouro">
+      <div class="mb-3">
+        <label for="num" class="form-label">Nº</label>
+        <input type="number" name="num" id="num" class="form-control">
       </div>
 
-      <div>
-        <label for="num">Nº</label>
-        <input type="number" name="num" id="num">
+      <div class="mb-3">
+        <label for="bairro" class="form-label">Bairro</label>
+        <input type="text" name="bairro" id="bairro" class="form-control">
       </div>
 
-      <div>
-        <label for="bairro">Bairro</label>
-        <input type="text" name="bairro" id="bairro">
+      <div class="mb-3">
+        <label for="cidade" class="form-label">Cidade</label>
+        <input type="text" name="cidade" id="cidade" class="form-control">
       </div>
 
-      <div>
-        <label for="cidade">Cidade</label>
-        <input type="text" name="cidade" id="cidade">
-      </div>
-
-      <div>
-        <label for="uf">UF</label>
-        <input type="text" name="uf" id="uf">
+      <div class="mb-3">
+        <label for="uf" class="form-label">UF</label>
+        <input type="text" name="uf" id="uf" class="form-control">
       </div>
 
       <button type="submit" class="btn btn-primary">Gravar</button>
@@ -104,8 +105,9 @@
       const bairro = document.querySelector('#bairro').value;
       const cidade = document.querySelector('#cidade').value;
       const uf = document.querySelector('#uf').value;
+      const cep = document.querySelector('#cep').value;
 
-      const endereco = `${logradouro}, ${num}, ${bairro} - ${cidade} ${uf}`;
+      const endereco = `${logradouro}, ${num}, ${bairro}, ${cidade} - ${uf}. cep: ${cep}`;
 
       axios.post('<%= urlApi %>/clientes', {
         nome,
@@ -125,10 +127,6 @@
           });
         })
         .catch(error => {
-          if (error.response.status === 401) {
-            location.href = '/login';
-          }
-
           Swal.fire({
             title: "Erro!",
             text: error.response.data.mensagem,
