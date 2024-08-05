@@ -12,14 +12,14 @@
 <body>
   <%- include('../cabecalho.ejs') %>
 
-  <main>
+  <main class="p-3">
     <h2>Clientes</h2>
 
     <a href="/clientes/adicionar" class="btn btn-primary mb-3">Adicionar Cliente</a>
 
     <div id="container-clientes">
       <% clientes.map(cliente => { %>
-        <div class="card">
+        <div class="card mb-3">
           <div class="card-body">
             <h5 class="card-title" style="text-transform: capitalize;"><%= cliente.nome %></h5>
             <h6 class="card-subtitle mb-2 text-muted"><%= cliente.telefone %> - <%= cliente.email %></h6>
