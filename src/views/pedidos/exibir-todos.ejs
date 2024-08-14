@@ -31,7 +31,7 @@
                 <strong class="text-warning"><%= pedido.status_pedido.status %></strong>
               <% } else if (pedido.status_pedido.status === 'cancelado') { %>
                 <strong class="text-danger"><%= pedido.status_pedido.status %></strong>
-              <% } else if (pedido.status_pedido.status === 'concluido') { %>
+              <% } else if (pedido.status_pedido.status === 'finalizado') { %>
                 <strong class="text-success"><%= pedido.status_pedido.status %></strong>
               <% } %>
             </div>
