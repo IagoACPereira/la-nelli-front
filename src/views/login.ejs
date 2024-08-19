@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <%- include('./templates/importacoesCss.ejs') %>
+</head>
+<body>
+  <!-- <%- include('./templates/cabecalho.ejs') %> -->
+  <form method="dialog" class="w-50 p-3" onsubmit="enviarFormulario()">
+    <div class="mb-3">
+      <label class="form-label" for="">Email</label>
+      <input class="form-control" type="text" name="email" id="email">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="">Senha</label>
+      <input class="form-control" type="password" name="senha" id="senha">
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit">Entrar</button>
+  </form>
+  
+  <%- include('./templates/importacoesJs.ejs') %>
+  <script>
+    const email = document.querySelector('#email')
+    const senha = document.querySelector('#senha')
+    async function enviarFormulario() {
+      try {
+        const autorizacao = await axios.post('<%= urlApi %>/auth/', {
+          email: email.value,
+          senha: senha.value,
+        });
+
+        document.cookie = `token=${autorizacao.data.token}; path=/`;
+
+        location.href = '/';
+      } catch (error) {
+        Swal.fire({
+          title: "Erro",
+          text: error.response.data.mensagem,
+          icon: "error"
+        });        
+      }
+    }
+  </script>
+</body>
+</html>

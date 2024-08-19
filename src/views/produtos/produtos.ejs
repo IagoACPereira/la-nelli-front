@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <%- include('../templates/importacoesCss.ejs') %>
+</head>
+<body>
+  <%- include('../templates/cabecalho.ejs') %>
+
+  <main class="p-3">
+    <h1>Produtos</h1>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Cód.</th>
+          <th scope="col">Produto</th>
+          <th scope="col">Qtd. Estoque</th>
+          <th scope="col">Preço</th>
+          <th scope="col">Categoria</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% produtos.dados.map(produto => { %>
+          <tr>
+            <th scope="row"><%= produto.id %></th>
+            <td><%= produto.nome %></td>
+            <td><%= produto.qtd_estoque %></td>
+            <td class="preco-venda">
+              <%= produto.preco_venda %>
+            </td>
+            <td><%= produto.categorias_produto.categoria %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <a href="/novo/produto" class="bi bi-plus-circle btn btn-primary w-100">&nbsp;Novo Produto</a>
+  </main>
+
+  <%- include('../templates/importacoesJs.ejs') %>
+
+  <script>
+    function converterParaBrl(preco) {
+      return new Intl.NumberFormat('pt-br', {
+        style: 'currency',
+        currency: 'BRL',
+      })
+        .format(preco)
+    }
+
+    const tableDatasPrecoVenda = document.querySelectorAll('.preco-venda');
+    
+    tableDatasPrecoVenda.forEach(preco => {
+      preco.innerHTML = converterParaBrl(preco.innerHTML);    
+    });
+  </script>
+</body>
+</html>
