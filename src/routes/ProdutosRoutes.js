@@ -17,4 +17,22 @@ export default Router()
     } catch (error) {
       res.send(error.message);
     }
+  })
+  .get('/novo/produto', async (req, res) => {
+    const { token } = req.cookies;
+    try {
+      const categorias = await axios.get(`${process.env.URLAPI}/categorias-produtos?limite=100000`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      res.render('produtos/novo-produto.ejs', {
+        categorias: categorias.data,
+        urlApi: process.env.URLAPI,
+        token,
+      });
+    } catch (error) {
+      res.send(error.message);
+    }
   });
