@@ -19,4 +19,15 @@ export default Router()
     } catch (error) {
       res.send(error.message);
     }
+  })
+  .get('/novo/cliente', async (req, res) => {
+    const { token } = req.cookies;
+    try {
+      res.render('clientes/novo-cliente.ejs', {
+        urlApi: process.env.URLAPI,
+        token,
+      });
+    } catch (error) {
+      res.send(error.message);
+    }
   });
