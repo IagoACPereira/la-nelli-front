@@ -35,7 +35,7 @@
             <td><%= produto.categorias_produto.categoria %></td>
             <td>
               <a href="/atualizar/produto?idProduto=<%= produto.id %>" class="btn text-primary bi bi-pencil-square"></a>
-              <button class="btn text-danger bi bi-trash"></button>
+              <button class="btn text-danger bi bi-trash" onclick="deletarProduto('<%= produto.id %>')"></button>
             </td>
           </tr>
         <% }) %>
@@ -61,6 +61,37 @@
     tableDatasPrecoVenda.forEach(preco => {
       preco.innerHTML = converterParaBrl(preco.innerHTML);    
     });
+  </script>
+  <script>
+    function recarregarPagina() {
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    async function deletarProduto(id) {
+      try {
+        const deletarProduto = await axios.delete(`<%= urlApi %>/produtos/${id}`, {
+          headers: {
+            Authorization: '<%= token %>'
+          }
+        });
+
+        Swal.fire({
+          title: "Sucesso",
+          text: deletarProduto.data.mensagem,
+          icon: "success"
+        });
+
+        recarregarPagina();
+      } catch (error) {
+        Swal.fire({
+          title: "Erro",
+          text: error.response.data.mensagem,
+          icon: "error"
+        });
+      }
+    }
   </script>
 </body>
 </html>

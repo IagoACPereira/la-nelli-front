@@ -13,6 +13,8 @@ export default Router()
 
       res.render('produtos/produtos.ejs', {
         produtos: produtos.data,
+        urlApi: process.env.URLAPI,
+        token,
       });
     } catch (error) {
       res.send(error.message);
