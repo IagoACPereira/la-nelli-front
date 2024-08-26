@@ -44,24 +44,5 @@
   </main>
 
   <%- include('../templates/importacoesJs.ejs') %>
-
-  <script>
-    function converterParaBrl(preco) {
-      return new Intl.NumberFormat('pt-br', {
-        style: 'currency',
-        currency: 'BRL',
-      })
-        .format(preco)
-    }
-
-    const tableDatasPrecoVenda = document.querySelectorAll('.preco-venda');
-    
-    tableDatasPrecoVenda.forEach(preco => {
-      preco.innerHTML = converterParaBrl(preco.innerHTML);    
-    });
-  </script>
-  <script>
-    
-  </script>
 </body>
 </html>
