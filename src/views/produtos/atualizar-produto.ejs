@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <%- include('../templates/importacoesCss.ejs') %>
+</head>
+<body>
+  <%- include('../templates/cabecalho.ejs') %>
+
+  <main class="p-3">
+    <h1 style="text-transform: capitalize;"><%= produto.nome %></h1>
+
+    <form method="dialog" class="w-50" onsubmit="enviarFormularioProduto()">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" name="nome" id="nome" class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <label for="precoVenda" class="form-label">Preço Venda</label>
+        <input type="text" name="precoVenda" id="precoVenda" class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <label for="qtdEstoque" class="form-label">Qtd. Estoque</label>
+        <input type="text" name="qtdEstoque" id="qtdEstoque" class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <label for="categoria" class="form-label">Categoria</label>
+        <div class="input-group">
+          <select name="categoria" id="categoria" class="form-select">
+            <option value="" selected disabled>--Selecione--</option>
+            <% categorias.dados.map(categoria => { %>
+              <option value="<%= categoria.id %>"><%= categoria.categoria.toUpperCase() %></option>
+            <% }) %>
+          </select>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary bi bi-plus-circle" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <!-- &nbsp;
+            Nova Categoria -->
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textArea class="form-control" name="descricao" id="descricao" rows="5"></textArea>
+      </div>
+
+      <button type="submit" class="btn btn-primary bi bi-save w-100">&nbsp;Gravar</button>
+    </form>
+
+    <!-- Modal -->
+    <form onsubmit="enviarFormularioCategoria()" method="dialog" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Nova Categoria</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="categoria2" class="form-label">Categoria</label>
+              <input type="text" name="categoria2" id="categoria2" class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger bi bi-x-circle" data-bs-dismiss="modal">&nbsp;Cancelar</button>
+            <button type="submit" class="btn btn-primary bi bi-save">&nbsp;Save changes</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <%- include('../templates/importacoesJs.ejs') %>
+  <script>
+    function recarregarPagina() {
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    function redirecionarPagina() {
+      setTimeout(() => {
+        location.href = '/produtos';
+      }, 1000);
+    }
+
+    function preencherFormulario() {
+      const inputNome = document.querySelector('#nome');
+      const inputPrecoVenda = document.querySelector('#precoVenda');
+      const inputQtdEstoque = document.querySelector('#qtdEstoque');
+      const selectCategoria = document.querySelector('#categoria');
+      const textAreaDescricao = document.querySelector('#descricao');
+
+      inputNome.value = '<%= produto.nome %>';
+      inputPrecoVenda.value = '<%= produto.preco_venda %>';
+      inputQtdEstoque.value = '<%= produto.qtd_estoque %>';
+      selectCategoria.value = '<%= produto.categorias_produto.id %>';
+      textAreaDescricao.value = '<%= produto.descricao %>';
+    }
+
+    preencherFormulario()
+
+    async function enviarFormularioCategoria() {
+      const inputCategoria2 = document.querySelector('#categoria2');
+      try {        
+        const novaCategoria = await axios.post('<%= urlApi %>/categorias-produtos', {
+          categoria: inputCategoria2.value,
+        }, {
+          headers: {
+            Authorization: '<%= token %>'
+          }
+        });
+
+        Swal.fire({
+          title: "Sucesso",
+          text: novaCategoria.data.mensagem,
+          icon: "success"
+        });
+
+        recarregarPagina();
+      } catch (error) {
+        console.log(error.response.data.mensagem);
+        Swal.fire({
+          title: "Erro",
+          text: error.response.data.mensagem,
+          icon: "error"
+        });     
+      }
+    }
+
+    async function enviarFormularioProduto() {
+      const inputNome = document.querySelector('#nome');
+      const inputPrecoVenda = document.querySelector('#precoVenda');
+      const inputQtdEstoque = document.querySelector('#qtdEstoque');
+      const selectCategoria = document.querySelector('#categoria');
+      const textAreaDescricao = document.querySelector('#descricao');
+      
+      try {
+        const novoProduto = await axios.put('<%= urlApi %>/produtos/<%= idProduto %>', {
+          nome: inputNome.value,
+          precoVenda: Number(inputPrecoVenda.value),
+          precoCompra: 0,
+          qtdEstoque: Number(inputQtdEstoque.value),
+          idCategoria: Number(selectCategoria.value),
+          descricao: textAreaDescricao.value,
+        }, {
+          headers: {
+            Authorization: '<%= token %>'
+          }
+        });
+
+        Swal.fire({
+          title: "Sucesso",
+          text: novoProduto.data.mensagem,
+          icon: "success"
+        });
+
+        redirecionarPagina();
+      } catch (error) {
+        console.log(error.response.data.mensagem);
+        Swal.fire({
+          title: "Erro",
+          text: error.response.data.mensagem,
+          icon: "error"
+        });
+      }
+    }
+  </script>
+</body>
+</html>

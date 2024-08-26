@@ -20,6 +20,7 @@
           <th scope="col">Qtd. Estoque</th>
           <th scope="col">Preço</th>
           <th scope="col">Categoria</th>
+          <th scope="col">Manipular</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,10 @@
               <%= produto.preco_venda %>
             </td>
             <td><%= produto.categorias_produto.categoria %></td>
+            <td>
+              <a href="/atualizar/produto?idProduto=<%= produto.id %>" class="btn text-primary bi bi-pencil-square"></a>
+              <button class="btn text-danger bi bi-trash"></button>
+            </td>
           </tr>
         <% }) %>
       </tbody>
