@@ -1,5 +1,6 @@
 import autenticacao from '../middlewares/autenticacao.js';
 import produtos from './ProdutosRoutes.js';
+import clientes from './ClientesRoutes.js';
 
 function routes(app) {
   app
@@ -23,6 +24,7 @@ function routes(app) {
     .use(
       autenticacao,
       produtos,
+      clientes,
     );
 }
 

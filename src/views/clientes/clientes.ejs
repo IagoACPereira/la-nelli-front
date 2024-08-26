@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <%- include('../templates/importacoesCss.ejs') %>
+</head>
+<body>
+  <%- include('../templates/cabecalho.ejs') %>
+
+  <main class="p-3">
+    <h1>Clientes</h1>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Cód.</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Telefone</th>
+          <th scope="col">Email</th>
+          <th scope="col">Endereço</th>
+          <th scope="col">Manipular</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% clientes.dados.map(cliente => { %>
+          <tr>
+            <th scope="row"><%= cliente.id %></th>
+            <td><%= cliente.nome %></td>
+            <td><%= cliente.telefone %></td>
+            <td><%= cliente.email %></td>
+            <td><%= cliente.endereco %></td>
+            <td>
+              <a href="" class="btn text-primary bi bi-pencil-square"></a>
+              <button class="btn text-danger bi bi-trash" onclick=""></button>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <a href="" class="bi bi-plus-circle btn btn-primary w-100">&nbsp;Novo Cliente</a>
+  </main>
+
+  <%- include('../templates/importacoesJs.ejs') %>
+
+  <script>
+    function converterParaBrl(preco) {
+      return new Intl.NumberFormat('pt-br', {
+        style: 'currency',
+        currency: 'BRL',
+      })
+        .format(preco)
+    }
+
+    const tableDatasPrecoVenda = document.querySelectorAll('.preco-venda');
+    
+    tableDatasPrecoVenda.forEach(preco => {
+      preco.innerHTML = converterParaBrl(preco.innerHTML);    
+    });
+  </script>
+  <script>
+    
+  </script>
+</body>
+</html>
